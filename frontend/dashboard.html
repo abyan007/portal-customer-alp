@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Pelanggan</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f9; padding: 40px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .logout { background: #dc3545; color: white; padding: 6px 12px; text-decoration: none; border-radius: 4px; }
+        input { padding: 8px; width: 75%; margin-top: 15px; }
+        button { padding: 8px 15px; background: #28a745; color: white; border: none; cursor: pointer; }
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li { background: #eee; padding: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h3>Halo, {{ username }}!</h3>
+            <a href="/logout" class="logout">Logout</a>
+        </div>
+        
+        <p>Form Isian Catatan / Pesanan:</p>
+        <input type="text" id="inputData" placeholder="Tulis catatan atau pesanan baru...">
+        <button onclick="tambahData()">Simpan</button>
+
+        <ul id="daftarData"></ul>
+    </div>
+
+    <script>
+        function muatData() {
+            const data = JSON.parse(localStorage.getItem('catatan_alp')) || [];
+            const list = document.getElementById('daftarData');
+            list.innerHTML = '';
+            data.forEach((item, index) => {
+                list.innerHTML += `<li>${item} <button style="background:#dc3545;padding:3px 8px;" onclick="hapusData(${index})">Hapus</button></li>`;
+            });
+        }
+        function tambahData() {
+            const input = document.getElementById('inputData');
+            if (!input.value) return;
+            const data = JSON.parse(localStorage.getItem('catatan_alp')) || [];
+            data.push(input.value);
+            localStorage.setItem('catatan_alp', JSON.stringify(data));
+            input.value = '';
+            muatData();
+        }
+        function hapusData(index) {
+            const data = JSON.parse(localStorage.getItem('catatan_alp')) || [];
+            data.splice(index, 1);
+            localStorage.setItem('catatan_alp', JSON.stringify(data));
+            muatData();
+        }
+        muatData();
+    </script>
+</body>
+</html>
